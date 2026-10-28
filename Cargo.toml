@@ -5,7 +5,6 @@ edition = "2024"
 
 [dependencies]
 eframe = { optional = true, version = "0.37.0", default-features = false, features = ["glow", "default_fonts"] }
-egui = { version = "0.37.0", optional = true, default-features = false, features = ["default_fonts"] }
 egui_plot = { version = "0.38.0", optional = true }
 fdk-aac = "0.8.0"
 rfd = { version = "0.17.2", optional = true }
@@ -13,11 +12,7 @@ symphonia = { version = "0.5", default-features = false, features = ["aac", "iso
 
 [features]
 default = ["gui"]
-# Oberflächen-Code (egui) ohne Fenstersystem
-ui = ["dep:egui", "dep:egui_plot"]
-gui = ["ui", "dep:eframe", "dep:rfd"]
-# Nur für die Dokumentation: rendert Screenshots der Oberfläche ohne Fenster und GPU
-screenshot = ["ui"]
+gui = ["dep:eframe", "dep:egui_plot", "dep:rfd"]
 
 [profile.release]
 opt-level = 3

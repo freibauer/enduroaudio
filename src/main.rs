@@ -4,7 +4,7 @@ mod dsp;
 mod media;
 mod mux;
 
-#[cfg(feature = "ui")]
+#[cfg(feature = "gui")]
 mod gui;
 
 use dsp::Params;
@@ -33,7 +33,12 @@ fn run_cli(args: &[String]) -> Result<(), String> {
     let p = Params::default();
     let t = std::time::Instant::now();
     let an = media::analyze(input, &cancel, |_| {})?;
-    eprintln!("Analyse: {:.1} s, {} Frames, Spitze {:.1} dBFS", t.elapsed().as_secs_f32(), an.frame_db.len(), an.peak_db);
+    eprintln!(
+        "Analyse: {:.1} s, Dauer {}, Spitze {:.1} dBFS",
+        t.elapsed().as_secs_f32(),
+        fmt_time(an.total_samples as f64 / an.sample_rate as f64),
+        an.peak_db
+    );
     let curve = dsp::compute_gain(&an, &p);
     let s = media::summarize(&an, &curve, &p);
     eprintln!("Schwankung vorher ±{:.2} dB, nachher ±{:.2} dB", s.spread_before, s.spread_after);
@@ -54,14 +59,6 @@ fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
     if args.first().map(String::as_str) == Some("--cli") {
         if let Err(e) = run_cli(&args[1..]) {
-            eprintln!("Fehler: {e}");
-            std::process::exit(1);
-        }
-        return;
-    }
-    #[cfg(feature = "screenshot")]
-    if args.first().map(String::as_str) == Some("--screenshots") {
-        if let Err(e) = gui::screenshot::run(&args[1..]) {
             eprintln!("Fehler: {e}");
             std::process::exit(1);
         }

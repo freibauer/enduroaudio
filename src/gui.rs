@@ -1,11 +1,10 @@
 //! Grafische Oberfläche.
 
-#[cfg(feature = "screenshot")]
-pub mod screenshot;
 
 use crate::dsp::{self, Analysis, GainCurve, Params};
 use crate::media;
 use crate::{default_output, fmt_time};
+use eframe::egui;
 use egui_plot::{Corner, Legend, Line, Plot, PlotPoints};
 use std::path::Path;
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -66,7 +65,6 @@ impl Job {
 // ---------------------------------------------------------------------------------------
 // Dateidialoge
 
-#[cfg(feature = "gui")]
 fn pick_input() -> Option<String> {
     rfd::FileDialog::new()
         .add_filter("Video/Audio (MP4)", &["mp4", "m4a", "m4v", "mov"])
@@ -74,7 +72,6 @@ fn pick_input() -> Option<String> {
         .map(|p| p.to_string_lossy().into_owned())
 }
 
-#[cfg(feature = "gui")]
 fn pick_output(current: &str) -> Option<String> {
     let p = Path::new(current);
     let mut dlg = rfd::FileDialog::new().add_filter("MP4", &["mp4", "m4a", "m4v", "mov"]);
@@ -85,16 +82,6 @@ fn pick_output(current: &str) -> Option<String> {
         dlg = dlg.set_file_name(n.to_string_lossy());
     }
     dlg.save_file().map(|p| p.to_string_lossy().into_owned())
-}
-
-#[cfg(not(feature = "gui"))]
-fn pick_input() -> Option<String> {
-    None
-}
-
-#[cfg(not(feature = "gui"))]
-fn pick_output(_: &str) -> Option<String> {
-    None
 }
 
 // ---------------------------------------------------------------------------------------
@@ -348,7 +335,6 @@ impl App {
     }
 }
 
-#[cfg(feature = "gui")]
 impl eframe::App for App {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         self.draw(ui);
@@ -421,7 +407,6 @@ impl App {
     }
 }
 
-#[cfg(feature = "gui")]
 pub fn run(input: Option<String>) -> eframe::Result {
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
