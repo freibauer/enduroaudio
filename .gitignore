@@ -1,0 +1,18 @@
+# Build-Artefakte ausschließen …
+/target/*
+
+# … außer den beiden fertigen Programmen
+!/target/release/
+/target/release/*
+!/target/release/enduroaudio
+
+!/target/x86_64-pc-windows-gnu/
+/target/x86_64-pc-windows-gnu/*
+!/target/x86_64-pc-windows-gnu/release/
+/target/x86_64-pc-windows-gnu/release/*
+!/target/x86_64-pc-windows-gnu/release/enduroaudio.exe
+
+# Testvideos (zu groß für GitHub, max. 100 MB pro Datei)
+*.mp4
+*.m4a
+*.mov
